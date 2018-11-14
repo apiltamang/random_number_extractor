@@ -6,7 +6,7 @@ This project was build on the skeleton maven archetype template (reference). As 
 
 This project can also be easy to import into IntelliJ/Eclipse. Simply click 'Import Project', and point towards the `pom.xml` file.
   
-# API Guide:
+## API Guide:
 The application is designed primarily around the interface `SampleGenerator`, to which an implementation `SampleGeneratorImpl` is provided that executes the stated goal of the application. It provides three APIs, `getPredictions(int nAttempts)`, `getPrediction()`, and `resetProbabilityStates(Map<T, Double> probstates)` which can be used to run a simulated **stress** test, a **single** query test, and a **probability reset** operation on the application, respectively. Note
 that the implementation is generic and not tied the `Integer` type for the keys. `TestOtherDistribution` demonstrates using String and Character as data-types for the indices.
 
