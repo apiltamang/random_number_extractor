@@ -1,16 +1,47 @@
 package com.diveplane.interview;
 
+import com.diveplane.interview.impl.NumberGeneratorImpl;
+import com.diveplane.interview.impl.Logger;
+import com.diveplane.interview.impl.StatsCollector;
+
 import java.util.Map;
 
 public class TestHelper {
 
-    // simple test helper
-    public static void runTest(Map<Integer, Double> inputData, StatsCollector statsCollector) {
-        boolean debug = true;
+    int nAttempts;
+    StatsCollector statsCollector;
+    Map<Integer, Double> probEntries;
+    boolean debug;
+
+    public TestHelper() {
+
+    }
+
+    public TestHelper withStatsCollector(StatsCollector statsCollector) {
+        this.statsCollector = statsCollector;
+        return this;
+    }
+
+    public TestHelper withProbEntries(Map<Integer, Double> probEntries) {
+        this.probEntries = probEntries;
+        return this;
+    }
+
+    public TestHelper withDebugMode(Boolean debug) {
+        this.debug = debug;
+        return this;
+    }
+
+    public void loadTest(int nAttempts) {
         System.out.println(" ============ running a new test =============");
-        CoreProcessor processor = new CoreProcessor(inputData, statsCollector, debug);
-        processor.getPredictions(1000000);
+        NumberGeneratorImpl processor = new NumberGeneratorImpl(probEntries, statsCollector, debug);
+        processor.getPredictions(nAttempts);
         statsCollector.printStatistics();
+    }
+
+    public static void runTest(Map<Integer, Double> inputData, StatsCollector statsCollector) {
+        new TestHelper().withProbEntries(inputData).
+                withStatsCollector(statsCollector).withDebugMode(true).loadTest(100000);
     }
 
     public static void assertEqualToTolerance(double d1, double d2, double tolerance) {

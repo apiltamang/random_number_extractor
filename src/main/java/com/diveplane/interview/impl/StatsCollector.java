@@ -1,4 +1,6 @@
-package com.diveplane.interview;
+package com.diveplane.interview.impl;
+
+import com.diveplane.interview.impl.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +17,20 @@ public class StatsCollector {
     Logger log;
     long startTime;
     long elapasedTime;
+    boolean retainData = true;
 
     public StatsCollector() {
         log = new Logger();
+    }
+
+    public StatsCollector(boolean retainData) {
+        /*
+         * This will be set to false while load-testing for a billion requests,
+         * because I ran out of heap space for that test.
+         */
+
+        this.retainData = retainData;
+        this.log = new Logger();
     }
 
     public void startTimer() {
@@ -25,16 +38,26 @@ public class StatsCollector {
     }
 
     public void stopTimer() {
-        long size = predictions.size();
         elapasedTime = System.currentTimeMillis() - startTime;
-        log.info(String.format("Elapsed time for %d experiments: %d milliseconds",size, elapasedTime));
+        log.info(String.format("Elapsed time for experiments: %d milliseconds", elapasedTime));
     }
 
     public void addPrediction(long value) {
-        predictions.add(value);
+        if (retainData)
+            predictions.add(value);
+    }
+
+    public void reset() {
+        predictions.clear();
+        freqTable.clear();
     }
 
     public void printStatistics() {
+
+        if (!retainData) {
+            log.info("The intermediate data was not retained because of performance reasons.");
+            return;
+        }
 
         // calculate net frequency by predicted characters
         for (Long predicted: predictions) {
@@ -54,6 +77,8 @@ public class StatsCollector {
     }
 
     public double predFractionFor(long index) {
+        if (predictions.size() == 0)
+            return 0;
         return (double) freqTable.get(index)/predictions.size();
     }
 }

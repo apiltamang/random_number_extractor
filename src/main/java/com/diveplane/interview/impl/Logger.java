@@ -1,4 +1,4 @@
-package com.diveplane.interview;
+package com.diveplane.interview.impl;
 
 /**
  * Just a simple Logger implementation to debug through the application,

@@ -1,9 +1,14 @@
 package com.diveplane.interview;
 
+import com.diveplane.interview.impl.Logger;
+import com.diveplane.interview.impl.StatsCollector;
 import junit.framework.TestCase;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A suite of simple tests for basic sanity testing.
+ */
 public class TestSuiteSimple extends TestCase {
 
     // simple test to ensure two samples with equal probabilities have close (w/in a tolerance) predicted fractions.
