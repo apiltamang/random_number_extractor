@@ -1,6 +1,6 @@
 package com.diveplane.interview.impl;
 
-import com.diveplane.interview.api.NumberGenerator;
+import com.diveplane.interview.api.SampleGenerator;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,14 +9,14 @@ import java.util.Random;
 /**
  * This class contains the core algorithm for extracting the entries from the specified probability set.
  */
-public class NumberGeneratorImpl implements NumberGenerator {
-    Map<Double, Integer> cumProbBucket;
+public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
+    Map<Double, T> cumProbBucket;
     Random randomGenerator;
     private StatsCollector statsCollector;
     private Logger log;
     final Boolean invertedMapInitialized;
 
-    public NumberGeneratorImpl(Map<Integer, Double> inputData, StatsCollector statsCollector, Boolean debug) {
+    public SampleGeneratorImpl(Map<T, Double> inputData, StatsCollector statsCollector, Boolean debug) {
         this.randomGenerator = new Random(1234L);
         this.statsCollector = statsCollector;
         log = new Logger(debug);
@@ -55,8 +55,8 @@ public class NumberGeneratorImpl implements NumberGenerator {
       * @return
      */
     @Override
-    public Integer getPrediction() {
-        Integer predicted;
+    public T getPrediction() {
+        T predicted;
         double nextRandom = randomGenerator.nextDouble();
         // iterate through the buckets.
         for (Double upperBound: cumProbBucket.keySet()) {
@@ -74,7 +74,7 @@ public class NumberGeneratorImpl implements NumberGenerator {
      * @param probStates
      */
     @Override
-    public void resetProbabilityStates(Map<Integer, Double> probStates) {
+    public void resetProbabilityStates(Map<T, Double> probStates) {
         this.randomGenerator = new Random(1234L);
         initInverseCumulativeProbBuckets(probStates);
     }
@@ -89,21 +89,21 @@ public class NumberGeneratorImpl implements NumberGenerator {
      * This inverted data structure effectively allows me to reduce the computation to O(n) order, where
      * n is the number of unique entries in the probability distribution.
      */
-    private void initInverseCumulativeProbBuckets(Map<Integer, Double> inputData) {
+    private void initInverseCumulativeProbBuckets(Map<T, Double> inputData) {
         /*  Note: The usage of a 'LinkedHashMap', as opposed to a regular 'HashMap' is
          *  critical, because this guarantees a linearly growing probability bucket pools.
          */
         cumProbBucket = new LinkedHashMap<>();
         Double cumRunningProb = 0.0d;
 
-        for (Integer ii: inputData.keySet()) {
+        for (T ii: inputData.keySet()) {
             Double prob = inputData.get(ii);
             if (prob != null && prob > 0.0d) {
                 cumRunningProb += prob;
                 cumProbBucket.put(cumRunningProb, ii);
-                log.debug(String.format("Number: %d, Upper cumulative prob. bound evaluated: %f", ii, cumRunningProb));
+                log.debug(String.format("Entry: %s, Upper cumulative prob. bound evaluated: %f", String.valueOf(ii), cumRunningProb));
             } else {
-                log.warn(String.format("Numbder: %d needs to have probability greater than zero. Got prob: %f", ii, prob));
+                log.warn(String.format("Entry: %s needs to have probability greater than zero. Got prob: %f", String.valueOf(ii), prob));
             }
 
         }

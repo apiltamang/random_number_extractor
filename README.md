@@ -5,7 +5,8 @@ This project was build on the skeleton maven archetype template (reference). As 
 - `java -cp target/random_number_extractor-1.0-SNAPSHOT.jar com.diveplane.interview.App` executes a small stress test (million queries) hard-coded in the main method.
 
 # API Guide:
-The application is designed primarily around the interface `NumberGenerator`, to which an implementation `NumberGeneratorImpl` is provided that executes the stated goal of the application. It provides three APIs, `getPredictions(int nAttempts)`, `getPrediction()`, and `resetProbabilityStates(Map<Integer, Double> probstates)` which can be used to run a simulated **stress** test, a **single** query test, and a **probability reset** operation on the application, respectively.
+The application is designed primarily around the interface `SampleGenerator`, to which an implementation `SampleGeneratorImpl` is provided that executes the stated goal of the application. It provides three APIs, `getPredictions(int nAttempts)`, `getPrediction()`, and `resetProbabilityStates(Map<T, Double> probstates)` which can be used to run a simulated **stress** test, a **single** query test, and a **probability reset** operation on the application, respectively. Note
+that the implementation is generic and not tied the `Integer` type for the keys. `TestOtherDistribution` demonstrates using String and Character as data-types for the indices.
 
 A `StatsCollector` type is also provided that is used to log basic statistical measures of the run such as overall time taken, as well as post-mortem analysis of the frequency of samples generated.
 
@@ -19,15 +20,15 @@ Map<Integer, Double> probEntries = new HashMap<>();
 probEntries.put(1, 0.20)
 probEntries.put(2, 0.80)
 
-StatsCollector statsCollector = new StatsCollector();
+StatsCollector statsCollector = new StatsCollector<Integer>();
 boolean debugMode = false;
-NumberGenerator generator = new NumberGeneratorImpl(probEntries, statsCollector, debugMode);
+NumberGenerator generator = new NumberGeneratorImpl<Integer>(probEntries, statsCollector, debugMode);
 generator.getPredictions(1000000); // do a simulated million queries run.
 statsCollector.printStatistics();
 ```
 ## Core Algorithm Guide:
 
-The core algorithm for solving the problem is a two step process, and is completely implemented in the `NumberGeneratorImpl` class.
+The core algorithm for solving the problem is a two step process, and is completely implemented in the `SampleGeneratorImpl` class.
 
 #### First Step: Preprocessing
 The first step involves pre-processing the provided probability entries to create an *inverted cumulative probability index*. I've called it so, because it is an inverted map of the original form, and the keys to this map is the cumulative probability  of each entry from the source.
@@ -48,5 +49,6 @@ Given the random number, I simply find which bucket it falls in the inverted map
 A number of tests have been included with this application in the `src/test` folder. In particular,
 - `TestSuiteSimple` defines a suite of simple tests intended to test basic sanity and wiring mechanisms.
 - `TestSuiteUpdate` provides a simple test to test an update of the internal probability distribution.
+- `TestOtherDistributions` provides simple test to verify that provided algorithm/implementation works with any data-type in the key.
 - `TestStrenuous` provides a suite of tests where an initial distribution of thousands and millions of entries are created, and run against simulated millions of queries. Some of the more extreme tests have been stubbed out because they do take from 10 minutes to a full hour to complete.
 

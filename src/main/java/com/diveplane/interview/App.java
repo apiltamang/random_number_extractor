@@ -1,7 +1,7 @@
 package com.diveplane.interview;
 
-import com.diveplane.interview.api.NumberGenerator;
-import com.diveplane.interview.impl.NumberGeneratorImpl;
+import com.diveplane.interview.api.SampleGenerator;
+import com.diveplane.interview.impl.SampleGeneratorImpl;
 import com.diveplane.interview.impl.StatsCollector;
 
 import java.util.HashMap;
@@ -22,8 +22,8 @@ public class App {
         probEntries.put(17, 0.01);
         probEntries.put(16, 0.04);
 
-        StatsCollector statsCollector = new StatsCollector();
-        NumberGenerator generator = new NumberGeneratorImpl(probEntries, statsCollector, false);
+        StatsCollector statsCollector = new StatsCollector<Integer>();
+        SampleGenerator generator = new SampleGeneratorImpl<Integer>(probEntries, statsCollector, false);
         generator.getPredictions(1000000); // do a simulated million queries run.
         statsCollector.printStatistics();
 

@@ -1,6 +1,6 @@
 package com.diveplane.interview;
 
-import com.diveplane.interview.impl.NumberGeneratorImpl;
+import com.diveplane.interview.impl.SampleGeneratorImpl;
 import com.diveplane.interview.impl.StatsCollector;
 import junit.framework.TestCase;
 
@@ -24,7 +24,7 @@ public class TestWithUpdate extends TestCase {
         boolean debug = true;
 
         System.out.println(" ============ running a new test =============");
-        NumberGeneratorImpl processor = new NumberGeneratorImpl(inputData, statsCollector, debug);
+        SampleGeneratorImpl processor = new SampleGeneratorImpl(inputData, statsCollector, debug);
         processor.getPredictions(1000000);
         statsCollector.printStatistics();
 

@@ -11,9 +11,9 @@ import java.util.Map;
  * A simple Statistics collection class to collect the metrics on the fly,
  * and print it out at the end. Valuable for a proof of implementation.
  */
-public class StatsCollector {
-    List<Long> predictions = new ArrayList<>();
-    Map<Long, Integer> freqTable = new HashMap<>();
+public class StatsCollector<T> {
+    List<T> predictions = new ArrayList<>();
+    Map<T, Integer> freqTable = new HashMap<>();
     Logger log;
     long startTime;
     long elapasedTime;
@@ -42,7 +42,7 @@ public class StatsCollector {
         log.info(String.format("Elapsed time for experiments: %d milliseconds", elapasedTime));
     }
 
-    public void addPrediction(long value) {
+    public void addPrediction(T value) {
         if (retainData)
             predictions.add(value);
     }
@@ -64,15 +64,15 @@ public class StatsCollector {
         }
 
         // calculate net frequency by predicted characters
-        for (Long predicted: predictions) {
+        for (T predicted: predictions) {
             Integer val = freqTable.getOrDefault(predicted, 0);
             freqTable.put(predicted, val+1);
         }
 
         // calculate the percentages
         long total = predictions.size();
-        for (Long key: freqTable.keySet()) {
-            log.info(String.format("Fraction of %d is %f", key, (float)freqTable.get(key)/total));
+        for (T key: freqTable.keySet()) {
+            log.info(String.format("Fraction of %s is %f", String.valueOf(key), (float)freqTable.get(key)/total));
         }
     }
 
@@ -81,7 +81,7 @@ public class StatsCollector {
      * @param index
      * @return
      */
-    public long countFor(long index) {
+    public long countFor(T index) {
         return freqTable.get(index);
     }
 
@@ -90,7 +90,7 @@ public class StatsCollector {
      * @param index
      * @return
      */
-    public double predFractionFor(long index) {
+    public double predFractionFor(T index) {
         if (predictions.size() == 0)
             return 0;
         return (double) freqTable.get(index)/predictions.size();

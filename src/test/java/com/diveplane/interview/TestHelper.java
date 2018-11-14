@@ -1,6 +1,6 @@
 package com.diveplane.interview;
 
-import com.diveplane.interview.impl.NumberGeneratorImpl;
+import com.diveplane.interview.impl.SampleGeneratorImpl;
 import com.diveplane.interview.impl.Logger;
 import com.diveplane.interview.impl.StatsCollector;
 
@@ -34,7 +34,7 @@ public class TestHelper {
 
     public void loadTest(int nAttempts) {
         System.out.println(" ============ running a new test =============");
-        NumberGeneratorImpl processor = new NumberGeneratorImpl(probEntries, statsCollector, debug);
+        SampleGeneratorImpl processor = new SampleGeneratorImpl(probEntries, statsCollector, debug);
         processor.getPredictions(nAttempts);
         statsCollector.printStatistics();
     }
