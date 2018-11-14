@@ -4,6 +4,8 @@ This project was build on the skeleton maven archetype template (reference). As 
 - `mvn package` packages the source into an executable jar.
 - `java -cp target/random_number_extractor-1.0-SNAPSHOT.jar com.diveplane.interview.App` executes a small stress test (million queries) hard-coded in the main method.
 
+This project can also be easy to import into IntelliJ/Eclipse. Simply click 'Import Project', and point towards the `pom.xml` file.
+  
 # API Guide:
 The application is designed primarily around the interface `SampleGenerator`, to which an implementation `SampleGeneratorImpl` is provided that executes the stated goal of the application. It provides three APIs, `getPredictions(int nAttempts)`, `getPrediction()`, and `resetProbabilityStates(Map<T, Double> probstates)` which can be used to run a simulated **stress** test, a **single** query test, and a **probability reset** operation on the application, respectively. Note
 that the implementation is generic and not tied the `Integer` type for the keys. `TestOtherDistribution` demonstrates using String and Character as data-types for the indices.
@@ -51,4 +53,33 @@ A number of tests have been included with this application in the `src/test` fol
 - `TestSuiteUpdate` provides a simple test to test an update of the internal probability distribution.
 - `TestOtherDistributions` provides simple test to verify that provided algorithm/implementation works with any data-type in the key.
 - `TestStrenuous` provides a suite of tests where an initial distribution of thousands and millions of entries are created, and run against simulated millions of queries. Some of the more extreme tests have been stubbed out because they do take from 10 minutes to a full hour to complete.
+
+## File Structure Guide:
+All relevant source and test files are arranged as the following:
+```
+src
+├── main
+│   └── java
+│       └── com
+│           └── diveplane
+│               └── interview
+│                   ├── App.java
+│                   ├── api
+│                   │   └── SampleGenerator.java
+│                   └── impl
+│                       ├── Logger.java
+│                       ├── SampleGeneratorImpl.java
+│                       └── StatsCollector.java
+└── test
+    └── java
+        └── com
+            └── diveplane
+                └── interview
+                    ├── TestHelper.java
+                    ├── TestOtherTypeDistribution.java
+                    ├── TestStrenuous.java
+                    ├── TestSuiteSimple.java
+                    └── TestWithUpdate.java
+```
+
 
