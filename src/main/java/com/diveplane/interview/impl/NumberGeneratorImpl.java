@@ -84,7 +84,7 @@ public class NumberGeneratorImpl implements NumberGenerator {
      * adds the prob. for each number cumulatively, and stores that as an inverted map. Best exemplified
      * as follows:
      * if inputData is a map as follows: {1 -> 0.25, 4 -> 0.5, 2 -> 0.10, 7 -> 0.15}, then we get
-     * an inverted map as follows: {0.25 -> 1, 0.75 -> 4, 0.80 -> 2, 1.0 -> 7}.
+     * an inverted map as follows: {0.25 -> 1, 0.75 -> 4, 0.85 -> 2, 1.0 -> 7}.
      *
      * This inverted data structure effectively allows me to reduce the computation to O(n) order, where
      * n is the number of unique entries in the probability distribution.

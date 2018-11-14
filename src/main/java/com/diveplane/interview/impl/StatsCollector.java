@@ -52,6 +52,10 @@ public class StatsCollector {
         freqTable.clear();
     }
 
+    /**
+     * Called at the end of a stress test experiment, this prints various statistics,
+     * which could be used as sanity check for the validation of the algorithm.
+     */
     public void printStatistics() {
 
         if (!retainData) {
@@ -72,10 +76,20 @@ public class StatsCollector {
         }
     }
 
+    /**
+     * Returns how many times a certain number was returned in a stress test experiment.
+     * @param index
+     * @return
+     */
     public long countFor(long index) {
         return freqTable.get(index);
     }
 
+    /**
+     * Returns the fraction that a certain number was returned in a stress test experiment.
+     * @param index
+     * @return
+     */
     public double predFractionFor(long index) {
         if (predictions.size() == 0)
             return 0;

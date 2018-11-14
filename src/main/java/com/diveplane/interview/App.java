@@ -7,12 +7,7 @@ import com.diveplane.interview.impl.StatsCollector;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
+public class App {
     public static void main( String[] args ) {
         // init. data
         Map<Integer, Double> probEntries = new HashMap<>();
