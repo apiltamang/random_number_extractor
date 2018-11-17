@@ -47,6 +47,14 @@ The second step is actually the process of drawing a sample during query time. W
 
 Given the random number, I simply find which bucket it falls in the inverted map. This is done by comparing the random number against the inverted map's keys, and getting the first key whose cum. probability is higher than the random value. For example, in the inverted map above, if the random number drawn is 0.56, I draw 4. If the random value is 0.91, I draw 7. Likewise, if the random value drawn is 0.20, I draw 1. Computationally, this is also an `O(n)` cost algorithm, making the entire application `O(n)` complex, where `n` is the total number of entries in the probability distribution.
 
+#### Update:
+The process of drawing a number, provided a random value, has been augmented to use a binary sort strategy to 
+pick a bucket from the indices of the cumulative probability entries. This algorithm is O(log n) complex, where
+n is the size of the prob. distribution.
+
+Given the update, the application is now able to scale to hundreds of millions of queries, given millions of distribution states.
+A billion queries still required ~ 5 minutes, so the test has been stubbed out from the test compilation.
+
 ## Test Suite
 A number of tests have been included with this application in the `src/test` folder. In particular,
 - `TestSuiteSimple` defines a suite of simple tests intended to test basic sanity and wiring mechanisms.
