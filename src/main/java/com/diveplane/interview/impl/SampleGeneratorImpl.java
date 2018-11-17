@@ -10,11 +10,11 @@ import java.util.Random;
  * This class contains the core algorithm for extracting the entries from the specified probability set.
  */
 public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
-    Map<Double, T> cumProbBucket;
     Random randomGenerator;
     private StatsCollector statsCollector;
     private Logger log;
     final Boolean invertedMapInitialized;
+    BinarySorter sorter;
 
     public SampleGeneratorImpl(Map<T, Double> inputData, StatsCollector statsCollector, Boolean debug) {
         this.randomGenerator = new Random(1234L);
@@ -23,7 +23,6 @@ public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
         initInverseCumulativeProbBuckets(inputData);
         this.invertedMapInitialized = true;
         log.debug("Successfully processed input data to create an inverse cumulative probability bracket.");
-        log.debug("The inverse cumulative prob. buckets created is: "+cumProbBucket.toString());
     }
 
     /**
@@ -39,7 +38,7 @@ public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
             throw new RuntimeException("Cannot proceed because the inverted map was not initialized!");
         statsCollector.startTimer();
         for (int i = 0; i<nAttempts; i++) {
-            getPrediction();
+            statsCollector.addPrediction(getPrediction());
             if ((i%1000000) == 0) {
                 log.info(String.format("Passing %d queries on the experiment.", i));
             }
@@ -56,17 +55,7 @@ public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
      */
     @Override
     public T getPrediction() {
-        T predicted;
-        double nextRandom = randomGenerator.nextDouble();
-        // iterate through the buckets.
-        for (Double upperBound: cumProbBucket.keySet()) {
-            if (nextRandom < upperBound) {
-                predicted = cumProbBucket.get(upperBound);
-                statsCollector.addPrediction(predicted);
-                return predicted;
-            }
-        }
-        throw new RuntimeException("ERROR: the predicted random number should have fallen in a given bucket. Indicative of an algorithm error.");
+        return (T) sorter.getFromFastArr(randomGenerator.nextDouble());
     }
 
     /**
@@ -92,8 +81,10 @@ public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
     private void initInverseCumulativeProbBuckets(Map<T, Double> inputData) {
         /*  Note: The usage of a 'LinkedHashMap', as opposed to a regular 'HashMap' is
          *  critical, because this guarantees a linearly growing probability bucket pools.
+         *  This data 'cumProbBucket' should be available for garbage collection since it's
+         *  on the stack memory.
          */
-        cumProbBucket = new LinkedHashMap<>();
+        Map<Double, T> cumProbBucket = new LinkedHashMap<>();
         Double cumRunningProb = 0.0d;
 
         for (T ii: inputData.keySet()) {
@@ -105,12 +96,15 @@ public class SampleGeneratorImpl<T> implements SampleGenerator<T> {
             } else {
                 log.warn(String.format("Entry: %s needs to have probability greater than zero. Got prob: %f", String.valueOf(ii), prob));
             }
-
         }
+        log.debug("The inverse cumulative prob. buckets created is: "+cumProbBucket.toString());
 
         // sanity check ...
         if (!(Math.abs(cumRunningProb - 1.0d) < 1.e-8)) {
             throw new RuntimeException(String.format("ERROR: probabilities did not sum to 1.0. Aborting operation. Got: %.9f", cumRunningProb));
         }
+
+        // now generate the data for a binary sorter
+        sorter = new BinarySorter(cumProbBucket);
     }
 }

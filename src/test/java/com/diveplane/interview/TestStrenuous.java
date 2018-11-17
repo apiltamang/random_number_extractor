@@ -51,8 +51,7 @@ public class TestStrenuous extends TestCase {
         helper.loadTest(nAttempts);
     }
 
-    // skipped because this takes about 10 minutes
-    public void _testStrenuousWithThousandEntriesAndHundredMillionQueries() {
+    public void testStrenuousWithThousandEntriesAndHundredMillionQueries() {
         System.out.println("Running a strenuous experiment with a 1000 probability entries and ten million simulated queries");
 
         Map<Integer, Double> equiPartionedEntries = new HashMap<>();
@@ -70,13 +69,49 @@ public class TestStrenuous extends TestCase {
         helper.loadTest(nAttempts);
     }
 
-    // skipped this test because it takes about 20 minutes to do this.
-    public void _testStrenuousWithTenThousandEntriesAndTenMillionQueries() {
+    public void testStrenuousWithTenThousandEntriesAndHundredMillionQueries() {
+        System.out.println("Running a strenuous experiment with a 1000 probability entries and ten million simulated queries");
+
+        Map<Integer, Double> equiPartionedEntries = new HashMap<>();
+        int nEntries = 10000;
+        int nAttempts = nEntries * 10000;
+        double prob = 1.0d/nEntries;
+
+        // populate the equi-partitioned prob. entries
+        for(int i = 1; i<= nEntries; i++) {
+            equiPartionedEntries.put(i, prob);
+        }
+
+        // Now using the TestHelper interface, execute load testing
+        TestHelper helper = new TestHelper().withProbEntries(equiPartionedEntries).withStatsCollector(new StatsCollector(false));
+        helper.loadTest(nAttempts);
+    }
+
+    public void testStrenuousWithHundredThousandEntriesAndHundredMillionQueries() {
+        System.out.println("Running a strenuous experiment with a 1000 probability entries and ten million simulated queries");
+
+        Map<Integer, Double> equiPartionedEntries = new HashMap<>();
+        int nEntries = 100000;
+        int nAttempts = nEntries * 1000;
+        double prob = 1.0d/nEntries;
+
+        // populate the equi-partitioned prob. entries
+        for(int i = 1; i<= nEntries; i++) {
+            equiPartionedEntries.put(i, prob);
+        }
+
+        // Now using the TestHelper interface, execute load testing
+        TestHelper helper = new TestHelper().withProbEntries(equiPartionedEntries).withStatsCollector(new StatsCollector(false));
+        helper.loadTest(nAttempts);
+    }
+
+    // skipped this test because it takes about 5 minutes to do this.
+    public void _testStrenuousWithTenThousandEntriesAndBillionQueries() {
         System.out.println("Running a strenuous experiment with a 10000 probability entries and ten million simulated queries");
 
         Map<Integer, Double> equiPartionedEntries = new HashMap<>();
         int nEntries = 10000;
-        int nAttempts = nEntries * 1000;
+        int nAttempts = nEntries * 100000;
         double prob = 1.0d/nEntries;
 
         // populate the equi-partitioned prob. entries

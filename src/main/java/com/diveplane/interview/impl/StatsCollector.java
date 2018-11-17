@@ -43,6 +43,7 @@ public class StatsCollector<T> {
     }
 
     public void addPrediction(T value) {
+        // sometimes we may not want to retain data because of an experiment with billions of queries!
         if (retainData)
             predictions.add(value);
     }

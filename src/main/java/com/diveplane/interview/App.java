@@ -1,6 +1,7 @@
 package com.diveplane.interview;
 
 import com.diveplane.interview.api.SampleGenerator;
+import com.diveplane.interview.impl.BinarySorter;
 import com.diveplane.interview.impl.SampleGeneratorImpl;
 import com.diveplane.interview.impl.StatsCollector;
 
@@ -26,6 +27,7 @@ public class App {
         SampleGenerator generator = new SampleGeneratorImpl<Integer>(probEntries, statsCollector, false);
         generator.getPredictions(1000000); // do a simulated million queries run.
         statsCollector.printStatistics();
-
+        //BinarySorter sorter = new BinarySorter();
+        //sorter.evaluateBucket();
     }
 }
